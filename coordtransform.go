@@ -33,14 +33,14 @@ func Wgs84ToGcj02(lng, lat float64) (float64, float64) {
 	return lng + dLng, lat + dLat
 }
 
-//GCJ02(火星坐标系)转WPS84
+//GCJ02(火星坐标系)转WGS84
 func Gcj02ToWps84(lng, lat float64) (float64, float64) {
 	if !InChina(lng, lat) {
 		return lng, lat
 	}
 	dLat := transformLat(lng-105.0, lat-35.0)
 	dLng := transformLng(lng-105.0, lat-35.0)
-	radLat := lat / 180.0 * EE
+	radLat := lat / 180.0 * PI
 	magic := math.Sin(radLat)
 	magic = 1 - EE*magic*magic
 	sqrtMagic := math.Sqrt(magic)
@@ -72,7 +72,7 @@ func Wgs84ToBd09(lng, lat float64) (float64, float64) {
 
 //百度转wgs84
 func Bd09ToWgs84(lng, lat float64) (float64, float64) {
-	return Bd09ToGcj02(Gcj02ToWps84(lng, lat))
+	return Gcj02ToWps84(Bd09ToGcj02(lng, lat))
 }
 
 func transformLat(lng, lat float64) float64 {
